@@ -17,6 +17,7 @@ class CreateTasksTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->string('title');
+            $table->string('deadline');
             $table->boolean('is_complete');
             $table->timestamps();
         });

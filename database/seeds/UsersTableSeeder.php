@@ -15,7 +15,8 @@ class UsersTableSeeder extends Seeder
         //create a test user
         factory(User::class)->create([
             'name' => 'Test User',
-            'email' => 'user@example.com'
+            'email' => 'user@example.com',
+            'timezone' => 'Pacific/Honolulu'
         ]);
 
         //create 50 random test users

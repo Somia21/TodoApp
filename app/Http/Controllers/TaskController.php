@@ -10,6 +10,9 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Carbon\Carbon;
+use DateTime;
+use DateTimeZone;
 
 class TaskController extends Controller
 {
@@ -21,12 +24,17 @@ class TaskController extends Controller
     public function index()
     {
         // paginate the authorized user's tasks with 5 per page
+        $userTimezone = Auth::user()->timezone;
         $tasks = Auth::user()
             ->tasks()
             ->orderBy('is_complete')
             ->orderByDesc('created_at')
             ->paginate(5);
 
+        foreach ($tasks as $taskKey => $taskValue) {
+            $date = new DateTime($taskValue->deadline, new DateTimeZone($userTimezone) );
+            $taskValue['formattedDealine'] = $date->format('d M,y h:i a');
+        }
         // return task index view with paginated tasks
         return view('tasks', [
             'tasks' => $tasks
@@ -45,11 +53,13 @@ class TaskController extends Controller
         // validate the given request
         $data = $this->validate($request, [
             'title' => 'required|string|max:255',
+            'deadline' => 'required',
         ]);
 
         // create a new incomplete task with given title
         Auth::user()->tasks()->create([
             'title' => $data['title'],
+            'deadline' => $data['deadline'],
             'is_complete' => false,
         ]);
 

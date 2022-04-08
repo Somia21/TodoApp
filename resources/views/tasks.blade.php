@@ -25,6 +25,16 @@
                                 </span>
                                 @endif
                             </div>
+
+                            <div class="form-group">
+                                <label for="title">Deadline</label>
+                                <input id="deadline" name="deadline" type="datetime-local" class="form-control{{ $errors->has('deadline') ? ' is-invalid' : '' }}"/>
+                                @if ($errors->has('deadline'))
+                                    <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $errors->first('deadline') }}</strong>
+                                </span>
+                                @endif
+                            </div>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </form>
                     </div>
@@ -36,11 +46,23 @@
                         <table class="table table-striped">
                             @foreach ($tasks as $task)
                                 <tr>
+                                    <th>Tasks</th>
+                                    <th>Deadline</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
                                     <td>
                                         @if ($task->is_complete)
                                             <s>{{ $task->title }}</s>
                                         @else
                                             {{ $task->title }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($task->is_complete)
+                                            <s>{{ $task->formattedDealine }}</s>
+                                        @else
+                                            {{ $task->formattedDealine }}
                                         @endif
                                     </td>
                                     <td class="text-right">
