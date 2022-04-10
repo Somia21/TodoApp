@@ -58,13 +58,13 @@
                                             {{ $task->title }}
                                         @endif
                                     </td>
-                                    <td>
+                                   <!--  <td>
                                         @if ($task->is_complete)
                                             <s>{{ $task->formattedDealine }}</s>
                                         @else
                                             {{ $task->formattedDealine }}
                                         @endif
-                                    </td>
+                                    </td> -->
                                     <td class="text-right">
                                         @if (! $task->is_complete)
                                             <form method="POST" action="{{ route('tasks.update', $task->id) }}">
