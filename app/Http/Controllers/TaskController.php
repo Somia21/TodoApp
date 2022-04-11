@@ -21,24 +21,9 @@ class TaskController extends Controller
      *
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('tasks');
-    }
-    public function getTasks(Request $request)
-    {
-        // paginate the authorized user's tasks with 5 per page
-        $tasks = Task::orderBy('is_complete')
-            ->orderByDesc('created_at')
-            ->paginate(5);
-
-        $timezone_name = timezone_name_from_abbr("", $request->timezone*60, false);
-        $timezone_name = empty($timezone_name) ? 'Asia/Karachi' : $timezone_name;
-        $todos = [];
-
-        foreach ($tasks as $task) {
-            $todos[] = ['id' => $task->id, 'title' => $task->title, 'deadline' => $this->convertUTCToLocal($task->deadline_utc,$timezone_name), 'is_complete' => $task->is_complete];
-        }
+        $todos = $this->getTask($request->timezone);
 
         return response()->json(['tasks' => $todos]);
     }
@@ -71,11 +56,9 @@ class TaskController extends Controller
             'is_complete' => false,
         ]);
 
-        // flash a success message to the session
-        session()->flash('status', 'Task Created!');
+        $todos = $this->getTask($request->timezone);
 
-        // redirect to tasks index
-        return redirect('/tasks');
+        return response()->json(["message" => "Task created." , 'tasks' => $todos]);
     }
 
     /**
@@ -117,5 +100,19 @@ class TaskController extends Controller
         $newDateTime->setTimezone(new \DateTimeZone($timezone)); 
         $dateTimeLocal = $newDateTime->format("h:i a, jS F");        
         return $dateTimeLocal;
+    }
+
+    public function getTask($timezone){
+        $tasks = Task::orderBy('is_complete')
+            ->orderByDesc('created_at')->get();
+
+        $timezone_name = timezone_name_from_abbr("", $timezone*60, false);
+        $timezone_name = empty($timezone_name) ? 'Asia/Karachi' : $timezone_name;
+        $todos = [];
+
+        foreach ($tasks as $task) {
+            $todos[] = ['id' => $task->id, 'title' => $task->title, 'deadline' => $this->convertUTCToLocal($task->deadline_utc,$timezone_name), 'is_complete' => $task->is_complete];
+        }
+        return $todos;
     }
 }

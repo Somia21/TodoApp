@@ -81,11 +81,12 @@
             @yield('content')
         </main>
     </div>
+
     <script type="text/javascript">
         var timezone_offset_minutes = new Date().getTimezoneOffset();
         timezone_offset_minutes = timezone_offset_minutes == 0 ? 0 : -timezone_offset_minutes;
         document.getElementById('tz').value = timezone_offset_minutes;
      </script>
-     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+     @yield('js')
 </body>
 </html>

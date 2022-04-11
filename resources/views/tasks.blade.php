@@ -14,7 +14,7 @@
                     <div class="card-header">New Task</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('tasks.store') }}">
+                        <form onsubmit="return submitData(event)" id="form"/>
                             @csrf
                             <div class="form-group">
                                 <label for="title">Title</label>
@@ -62,37 +62,75 @@
     </div>
 @endsection
 
-@push('scripts')
-
+@section('js')
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script>
     $(document).ready(function(){
         var timezone_offset_minutes = new Date().getTimezoneOffset();
         timezone_offset_minutes = timezone_offset_minutes == 0 ? 0 : -timezone_offset_minutes;
-        console.log("calling ajx");
         $.ajax({
             url: '{{route("tasks.index")}}',
             data: {timezone: timezone_offset_minutes},
             success: function(response){
                 console.log("response",response);
-                // $.each(response.tasks, function(key, value) {
+                $.each(response.tasks, function(key, value) {
 
-                //     var title = '';
-                //     var deadline = '';
-                //     var complete = '';
+                    var title = '';
+                    var deadline = '';
+                    var complete = '';
 
-                //     if(value.is_complete){
-                //         title = '<s><td>' + value.title + '</td></s>';
-                //         deadline = '<s><td>' + value.deadline + '</td></s>';
-                //     }else{
-                //         title = '<td>' + value.title + '</td>';
-                //         deadline = '<td>' + value.deadline + '</td>';
-                //         complete = '<td text-right><a href="/update/'+ value.id +'" class="btn btn-primary">Complete</a></td>';
-                //     }
-                //     var html = '<tr>'+title+deadline+complete+'</tr>';
-                //     $('tbody').append(html);
-                // });
+                    if(value.is_complete){
+                        title = '<td><s>' + value.title + '</s></td>';
+                        deadline = '<td><s>' + value.deadline + '/s></td>';
+                        complete = '<td text-right><s>Completed</s></td>';
+                    }else{
+                        title = '<td>' + value.title + '</td>';
+                        deadline = '<td>' + value.deadline + '</td>';
+                        complete = '<td text-right><a href="/update/'+ value.id +'" class="btn btn-primary">Complete</a></td>';
+                    }
+                    var html = '<tr>'+title+deadline+complete+'</tr>';
+                    $('tbody').append(html);
+                });
             }
         });
+
+
     });
+
+    var submitData = function (e) {
+            e.preventDefault(); 
+            const formdata = $('#form').serialize();
+             $.ajax({
+            url: '{{route("tasks.store")}}',
+            data: formdata,
+            method: "POST",
+            success : function (response) {
+                $('tbody').html('');
+                $.each(response.tasks, function(key, value) {
+
+                    var title = '';
+                    var deadline = '';
+                    var complete = '';
+
+                    if(value.is_complete){
+                        title = '<td><s>' + value.title + '</s></td>';
+                        deadline = '<td><s>' + value.deadline + '/s></td>';
+                        complete = '<td text-right><s>Completed</s></td>';
+                    }else{
+                        title = '<td>' + value.title + '</td>';
+                        deadline = '<td>' + value.deadline + '</td>';
+                        complete = '<td text-right><a href="/update/'+ value.id +'" class="btn btn-primary">Complete</a></td>';
+                    }
+                    var html = '<tr>'+title+deadline+complete+'</tr>';
+                    $('tbody').append(html);
+                });
+                $('#form').trigger("reset");
+                alert(response.message);
+            },
+
+            });
+             return false;
+        }
+
 </script>
-@endpush
+@endsection
