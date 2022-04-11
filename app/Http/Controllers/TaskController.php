@@ -68,20 +68,18 @@ class TaskController extends Controller
      * @return Redirector
      * @throws AuthorizationException
      */
-    public function update(Task $task)
+    public function update(Request $request)
     {
         // check if the authenticated user can complete the task
         // $this->authorize('complete', $task);
-
+        $task = Task::find($request->id);
         // mark the task as complete and save it
         $task->is_complete = true;
         $task->save();
 
-        // flash a success message to the session
-        session()->flash('status', 'Task Completed!');
+        $todos = $this->getTask($request->timezone);
 
-        // redirect to tasks index
-        return redirect('/tasks');
+        return response()->json(["message" => "Task updated." , 'tasks' => $todos]);
     }
 
     public function convertLocalToUTC($datetime)

@@ -17,10 +17,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Route::middleware(['auth'])->group(function () {
+
 Route::resource('tasks', 'TaskController', [
    'only' => [
-       'index', 'store','update'
+       'index', 'store',
    ]
 ]);
-// });
+Route::post('/tasks/update', [App\Http\Controllers\TaskController::class, 'update'])->name('tasks.update');

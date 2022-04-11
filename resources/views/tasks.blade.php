@@ -86,7 +86,7 @@
                     }else{
                         title = '<td>' + value.title + '</td>';
                         deadline = '<td>' + value.deadline + '</td>';
-                        complete = '<td text-right><a href="/update/'+ value.id +'" class="btn btn-primary">Complete</a></td>';
+                        complete = '<td text-right><a href="#" class="btn btn-primary" onclick="updateTask('+value.id+')">Complete</a></td>';
                     }
                     var html = '<tr>'+title+deadline+complete+'</tr>';
                     $('tbody').append(html);
@@ -98,39 +98,76 @@
     });
 
     var submitData = function (e) {
-            e.preventDefault(); 
-            const formdata = $('#form').serialize();
-             $.ajax({
-            url: '{{route("tasks.store")}}',
-            data: formdata,
-            method: "POST",
-            success : function (response) {
-                $('tbody').html('');
-                $.each(response.tasks, function(key, value) {
+        e.preventDefault(); 
+        const formdata = $('#form').serialize();
+        $.ajax({
+        url: '{{route("tasks.store")}}',
+        data: formdata,
+        method: "POST",
+        success : function (response) {
+            $('tbody').html('');
+            $.each(response.tasks, function(key, value) {
 
-                    var title = '';
-                    var deadline = '';
-                    var complete = '';
+                var title = '';
+                var deadline = '';
+                var complete = '';
 
-                    if(value.is_complete){
-                        title = '<td><s>' + value.title + '</s></td>';
-                        deadline = '<td><s>' + value.deadline + '/s></td>';
-                        complete = '<td text-right><s>Completed</s></td>';
-                    }else{
-                        title = '<td>' + value.title + '</td>';
-                        deadline = '<td>' + value.deadline + '</td>';
-                        complete = '<td text-right><a href="/update/'+ value.id +'" class="btn btn-primary">Complete</a></td>';
-                    }
-                    var html = '<tr>'+title+deadline+complete+'</tr>';
-                    $('tbody').append(html);
-                });
-                $('#form').trigger("reset");
-                alert(response.message);
-            },
-
+                if(value.is_complete){
+                    title = '<td><s>' + value.title + '</s></td>';
+                    deadline = '<td><s>' + value.deadline + '/s></td>';
+                    complete = '<td text-right><s>Completed</s></td>';
+                }else{
+                    title = '<td>' + value.title + '</td>';
+                    deadline = '<td>' + value.deadline + '</td>';
+                    complete = '<td text-right><a href="#" class="btn btn-primary" onclick="updateTask('+value.id+')">Complete</a></td>';
+                }
+                var html = '<tr>'+title+deadline+complete+'</tr>';
+                $('tbody').append(html);
             });
-             return false;
-        }
+            $('#form').trigger("reset");
+            alert(response.message);
+        },
+        });
+        return false;
+    }
 
+    var updateTask = function(id){
+        var timezone_offset_minutes = new Date().getTimezoneOffset();
+        timezone_offset_minutes = timezone_offset_minutes == 0 ? 0 : -timezone_offset_minutes;
+
+        $.ajax({
+        url: '{{url("tasks/update")}}',
+        headers: {
+            'X-CSRF-TOKEN' : "{{ csrf_token() }}"
+        },
+        data: {
+            'id': id,
+            'timezone': timezone_offset_minutes
+        },
+        method: "POST",
+        success : function (response) {
+            $('tbody').html('');
+            $.each(response.tasks, function(key, value) {
+
+                var title = '';
+                var deadline = '';
+                var complete = '';
+
+                if(value.is_complete){
+                    title = '<td><s>' + value.title + '</s></td>';
+                    deadline = '<td><s>' + value.deadline + '/s></td>';
+                    complete = '<td text-right><s>Completed</s></td>';
+                }else{
+                    title = '<td>' + value.title + '</td>';
+                    deadline = '<td>' + value.deadline + '</td>';
+                    complete = '<td text-right><a href="#" class="btn btn-primary" onclick="updateTask('+value.id+')">Complete</a></td>';
+                }
+                var html = '<tr>'+title+deadline+complete+'</tr>';
+                $('tbody').append(html);
+            });
+        },
+
+        });
+    }
 </script>
 @endsection
