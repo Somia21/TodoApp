@@ -24,17 +24,19 @@ class Task extends Model
     protected $fillable = [
         'title',
         'is_complete',
-        'deadline'
+        'deadline_utc',
+        'deadline_local',
+        'local_timezone'
     ];
 
     /**
      * The relationship to the owning user.
      *
      * @return BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    //  */
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
 }

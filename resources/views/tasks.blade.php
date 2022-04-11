@@ -34,6 +34,7 @@
                                     <strong>{{ $errors->first('deadline') }}</strong>
                                 </span>
                                 @endif
+                                <input type="hidden" name="tz" id="tz">
                             </div>
                             <button type="submit" class="btn btn-primary">Create</button>
                         </form>
@@ -44,44 +45,54 @@
 
                     <div class="card-body">
                         <table class="table table-striped">
-                            @foreach ($tasks as $task)
+                            <thead>
                                 <tr>
                                     <th>Tasks</th>
                                     <th>Deadline</th>
                                     <th></th>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        @if ($task->is_complete)
-                                            <s>{{ $task->title }}</s>
-                                        @else
-                                            {{ $task->title }}
-                                        @endif
-                                    </td>
-                                   <!--  <td>
-                                        @if ($task->is_complete)
-                                            <s>{{ $task->formattedDealine }}</s>
-                                        @else
-                                            {{ $task->formattedDealine }}
-                                        @endif
-                                    </td> -->
-                                    <td class="text-right">
-                                        @if (! $task->is_complete)
-                                            <form method="POST" action="{{ route('tasks.update', $task->id) }}">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-primary">Complete</button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </table>
-
-                        {{ $tasks->links() }}
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+
+<script>
+    $(document).ready(function(){
+        var timezone_offset_minutes = new Date().getTimezoneOffset();
+        timezone_offset_minutes = timezone_offset_minutes == 0 ? 0 : -timezone_offset_minutes;
+        console.log("calling ajx");
+        $.ajax({
+            url: '{{route("tasks.index")}}',
+            data: {timezone: timezone_offset_minutes},
+            success: function(response){
+                console.log("response",response);
+                // $.each(response.tasks, function(key, value) {
+
+                //     var title = '';
+                //     var deadline = '';
+                //     var complete = '';
+
+                //     if(value.is_complete){
+                //         title = '<s><td>' + value.title + '</td></s>';
+                //         deadline = '<s><td>' + value.deadline + '</td></s>';
+                //     }else{
+                //         title = '<td>' + value.title + '</td>';
+                //         deadline = '<td>' + value.deadline + '</td>';
+                //         complete = '<td text-right><a href="/update/'+ value.id +'" class="btn btn-primary">Complete</a></td>';
+                //     }
+                //     var html = '<tr>'+title+deadline+complete+'</tr>';
+                //     $('tbody').append(html);
+                // });
+            }
+        });
+    });
+</script>
+@endpush

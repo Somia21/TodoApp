@@ -65,25 +65,29 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            <!-- @if (Route::has('login')) -->
-                <div class="top-right links">
-                    <a href="{{ url('/tasks') }}">Tasks</a>
-                   <!--  @auth
-                        <a href="{{ url('/tasks') }}">Tasks</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth -->
-                </div>
-            <!-- @endif -->
             <div class="content">
                 <div class="title m-b-md">
-                    {{ config('app.name') }}
+                   <!-- <h4> <button onclick="openTodoApp()">
+                       Open ToDo App
+                    </button> </h4> -->
                 </div>
             </div>
         </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                var timezone_offset_minutes = new Date().getTimezoneOffset();
+                timezone_offset_minutes = timezone_offset_minutes == 0 ? 0 : -timezone_offset_minutes;
+                
+                $.ajax({
+                    url: '{{route("tasks.index")}}',
+                    data: {timezone: timezone_offset_minutes},
+                    success: function(response){
+                        
+                        console.log("response",response);
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

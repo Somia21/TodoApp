@@ -42,10 +42,10 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function tasks()
-    {
-        return $this->hasMany(Task::class);
-    }
+    // public function tasks()
+    // {
+    //     return $this->hasMany(Task::class);
+    // }
 
     /**
      * Set and encrypt the password attribute.

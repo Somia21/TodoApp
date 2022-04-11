@@ -44,7 +44,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        @guest
+                        <!-- @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
@@ -71,7 +71,7 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                        @endguest -->
                     </ul>
                 </div>
             </div>
@@ -81,5 +81,11 @@
             @yield('content')
         </main>
     </div>
+    <script type="text/javascript">
+        var timezone_offset_minutes = new Date().getTimezoneOffset();
+        timezone_offset_minutes = timezone_offset_minutes == 0 ? 0 : -timezone_offset_minutes;
+        document.getElementById('tz').value = timezone_offset_minutes;
+     </script>
+     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </body>
 </html>

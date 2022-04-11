@@ -12,15 +12,15 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('tasks');
 });
 
 Auth::routes();
 
 // Route::middleware(['auth'])->group(function () {
-   Route::resource('tasks', 'TaskController', [
-       'only' => [
-           'index', 'store', 'update'
-       ]
-   ]);
+Route::resource('tasks', 'TaskController', [
+   'only' => [
+       'index', 'store','update'
+   ]
+]);
 // });

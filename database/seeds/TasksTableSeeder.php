@@ -1,4 +1,4 @@
-<?php
+sass<?php
 
 use App\Models\Task;
 use App\Models\User;
@@ -15,10 +15,10 @@ class TasksTableSeeder extends Seeder
     public function run()
     {
         // get all users
-        $users = User::all();
+        // $users = User::all();
 
         // loop through each user
-        foreach ($users as $user) {
+        // foreach ($users as $user) {
             // determine how many tasks to create for the user
             $limit = random_int(10, 20);
 
@@ -28,12 +28,12 @@ class TasksTableSeeder extends Seeder
                 $task = factory(Task::class)->make();
 
                 // associate the task to the user
-                $task->user()->associate($user);
+                // $task->user()->associate($user);
 
                 // save the task
                 $task->save();
             }
-        }
+        // }
 
 
     }
